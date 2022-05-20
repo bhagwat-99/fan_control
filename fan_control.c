@@ -32,13 +32,13 @@ int export_gpio()
                 int fd = open("/sys/class/gpio/export", O_WRONLY);
                 if (fd == -1) {
                         perror("Unable to open /sys/class/gpio/export");
-                        return -1;
+                        exit(1);
                 }
 
                 if (write(fd, "412", 3) != 3) {
                         perror("Error writing to /sys/class/gpio/export");
                         close(fd);
-                        return -1;
+                        exit(1);
                 }
 
                 close(fd);
@@ -59,16 +59,15 @@ int unexport_gpio()
                 int fd = open("/sys/class/gpio/unexport", O_WRONLY);
                 if (fd == -1) {
                         perror("Unable to open /sys/class/gpio/unexport");
-                        return -1;
+                        exit(1);
                 }
 
                 if (write(fd, "412", 3) != 3) {
                         perror("Error writing to /sys/class/gpio/unexport");
-                        return -1;
+                        exit(1);;
                 }
 
                 close(fd);
-                return 0;
 
         }
         return 0;
@@ -82,12 +81,14 @@ int set_gpio_direction()
     int fd = open("/sys/class/gpio/gpio412/direction", O_WRONLY);
     if (fd == -1) {
         perror("Unable to open /sys/class/gpio/gpio412/direction");
-        return -1;
+        unexport_gpio();
+        exit(1);
     }
 
     if (write(fd, "out", 3) != 3) {
         perror("Error writing to /sys/class/gpio/gpio412/direction");
-        return -1;
+        unexport_gpio();
+        exit(1);
     }
 
     close(fd);
@@ -238,57 +239,56 @@ int fan_off()
             return -1;
         }
 
-        return 0;
+        return 0;printf("gpio exported successfully\n");
 }
 
 int control_fan()
 {
-        int core_temp;
-        if(core_temp = read_temp() == -1)
+        while(1)
         {
-                return -1;
-        }
+                int core_temp;
+                if(core_temp = read_temp() == -1)
+                {
+                        return -1;
+                }
 
-        if(core_temp < 70000)
-        {
-                // turn fan off
-                fan_on();
-        }
-        else if(core_temp > 75000)
-        {
-                //turn on fan
-                fan_off();
+                if(core_temp < 70000)
+                {
+                        // turn fan off
+                        fan_off();
+                }
+                else if(core_temp > 75000)
+                {
+                        //turn on fan
+                        fan_on();
+                }
+                sleep(1);
         }
 }
 
 int main()
 {
-        if(export_gpio() == -1)
-        {
-                return -1;
-        }
+        export_gpio();
+        
+        //printf("gpio exported successfully\n");
 
-        if(set_gpio_direction() == -1)
-        {
-                if(unexport_gpio() == -1)
-                {
-                        return -1;
-                }
-
-                return -1;
-        }
+        set_gpio_direction();
+        
+        //printf("gpio direction set to output\n");
 
         //turn off fan
         fan_off();
+        //printf("fan turned off manually\n");
+
 
         if(control_fan() == -1)
         {
                 return -1;
         }
+        //printf("after control fan\n");
 
-        if(unexport_gpio() == -1)
-        {
-                return -1;
-        }
+        unexport_gpio();
+       
+        //printf("gpio unexported \n");
         return 0;
 }
