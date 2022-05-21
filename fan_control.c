@@ -206,7 +206,7 @@ int read_temp()
     }
     fclose(fd);
 
-    //printf("core_temp: %d\n",core_temp);
+    printf("read temp core_temp: %d\n",core_temp);
     return core_temp;
 }
 
@@ -255,27 +255,22 @@ int control_fan()
 {
         while(1)
         {
-                int core_temp;
-                if(core_temp = read_temp() == -1)
-                {
-                        return -1;
-                }
-                printf("control fan core_temp: %d\n",core_temp);
+                int core_temp = read_temp();
+
+                printf("In control fan core_temp: %d\n",core_temp);
 
                 if(core_temp < 70000)
                 {
                         // turn fan off
                         fan_off();
-                        printf("core temp must be less than 70000");
                 }
                 if(core_temp > 75000)
                 {
                         //turn on fan
                         fan_on();
-                        printf("core temp must be more than 75000");
                 }
-                printf("end of control fan");
-                sleep(1);
+                printf("end of control fan \n");
+                sleep(20);
         }
 }
 
