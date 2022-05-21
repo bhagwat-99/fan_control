@@ -189,30 +189,30 @@ int read_temp()
     fclose(fd);
 
 
+// thermal zone0 has default value 70000 does not change
+//     // read temperature of thermal zone 5
+//     filepath = "/sys/devices/virtual/thermal/thermal_zone5/temp";
+//     MODE = "r";
+//     fd = fopen(filepath, MODE);
+//     if(fd == NULL) {
+//         printf("Unable to open %s",filepath);
+//         return -1;
+//     }
+//     fgets(buf,10,fd);
+//     temp = atoi(buf);
+//     if(core_temp < temp)
+//     {
+//             core_temp = temp;
+//     }
+//     fclose(fd);
 
-    // read temperature of thermal zone 5
-    filepath = "/sys/devices/virtual/thermal/thermal_zone5/temp";
-    MODE = "r";
-    fd = fopen(filepath, MODE);
-    if(fd == NULL) {
-        printf("Unable to open %s",filepath);
-        return -1;
-    }
-    fgets(buf,10,fd);
-    temp = atoi(buf);
-    if(core_temp < temp)
-    {
-            core_temp = temp;
-    }
-    fclose(fd);
-
-    printf("read temp core_temp: %d\n",core_temp);
+//    printf("read temp core_temp: %d\n",core_temp);
     return core_temp;
 }
 
 int fan_on()
 {
-        printf("In fan on");
+        //printf("In fan on");
         // turn fan off
         int fd = open("/sys/class/gpio/gpio412/value", O_WRONLY);
         if (fd == -1)
@@ -225,14 +225,14 @@ int fan_on()
             close(fd);
             return -1;
         }
-        printf("Fan turned on\n");
+        //printf("Fan turned on\n");
 
         return 0;
 }
 
 int fan_off()
 {
-        printf("In fan off");
+        //printf("In fan off");
         // turn fan off
         int fd = open("/sys/class/gpio/gpio412/value", O_WRONLY);
         if (fd == -1)
@@ -247,7 +247,7 @@ int fan_off()
         }
 
         return 0;
-        printf("Fan turned off\n");
+        //printf("Fan turned off\n");
 
 }
 
@@ -257,7 +257,7 @@ int control_fan()
         {
                 int core_temp = read_temp();
 
-                printf("In control fan core_temp: %d\n",core_temp);
+                //printf("In control fan core_temp: %d\n",core_temp);
 
                 if(core_temp < 70000)
                 {
@@ -269,7 +269,7 @@ int control_fan()
                         //turn on fan
                         fan_on();
                 }
-                printf("end of control fan \n");
+                //printf("end of control fan \n");
                 sleep(20);
         }
 }
@@ -278,7 +278,7 @@ int main()
 {
         export_gpio();
         
-        printf("gpio exported successfully\n");
+        //printf("gpio exported successfully\n");
 
         set_gpio_direction();
         
@@ -286,17 +286,17 @@ int main()
 
         //turn off fan
         fan_off();
-        printf("fan turned off manually\n");
+        //printf("fan turned off manually\n");
 
 
         if(control_fan() == -1)
         {
                 return -1;
         }
-        printf("after control fan\n");
+        //printf("after control fan\n");
 
         unexport_gpio();
        
-        printf("gpio unexported \n");
+        //printf("gpio unexported \n");
         return 0;
 }
