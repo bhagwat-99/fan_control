@@ -6,6 +6,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define CONF_FILE_PATH "test.conf"
+int temp_h=0,temp_l=0;// fan control temperature upper and lower limit
+
 
 // check if file already exist to avoid gpio export error
 int checkIfFileExists(const char * filename)
@@ -274,8 +277,31 @@ int control_fan()
         }
 }
 
+void read_conf_file()
+{
+       const char * CONF_FILE_FORMAT = "{\n\t\"Temperature(L)\":%d,\n\t\"Temperature(H)\":%d\n}";
+
+        FILE * file;
+        char *filename = CONF_FILE_PATH;
+        //char *filename = "ento.conf";
+        file = fopen(filename, "r");
+        if(file == NULL)
+        {       printf("can not open file %s\n",filename);
+                exit(1);
+        }
+
+        if(fscanf(file,CONF_FILE_FORMAT, &temp_l, &temp_h) == EOF)
+        {
+                printf("Error reading file %s\n",filename);
+                exit(1);
+        }
+}
+
 int main()
 {
+        //reading config file
+        read_conf_file();
+
         export_gpio();
         
         //printf("gpio exported successfully\n");
