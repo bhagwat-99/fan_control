@@ -101,6 +101,7 @@ int read_temp()
     int core_temp = 0;
 
     // read temperature of thermal zone 0
+    //char * filepath = "0";
     char * filepath = "/sys/devices/virtual/thermal/thermal_zone0/temp";
     char * MODE = "r";
     FILE* fd = fopen(filepath, MODE);
@@ -117,6 +118,7 @@ int read_temp()
     fclose(fd);
 
     // read temperature of thermal zone 1
+    //filepath = "1";
     filepath = "/sys/devices/virtual/thermal/thermal_zone1/temp";
     MODE = "r";
     fd = fopen(filepath, MODE);
@@ -135,6 +137,7 @@ int read_temp()
 
 
     // read temperature of thermal zone 2
+    //filepath = "2";
     filepath = "/sys/devices/virtual/thermal/thermal_zone2/temp";
     MODE = "r";
     fd = fopen(filepath, MODE);
@@ -152,6 +155,7 @@ int read_temp()
 
 
     // read temperature of thermal zone 3
+    //filepath = "3";
     filepath = "/sys/devices/virtual/thermal/thermal_zone3/temp";
     MODE = "r";
     fd = fopen(filepath, MODE);
@@ -202,7 +206,7 @@ int read_temp()
     }
     fclose(fd);
 
-
+    printf("core_temp: %d\n",core_temp);
     return core_temp;
 }
 
@@ -220,6 +224,7 @@ int fan_on()
             close(fd);
             return -1;
         }
+        printf("Fan turned on\n");
 
         return 0;
 }
@@ -239,7 +244,9 @@ int fan_off()
             return -1;
         }
 
-        return 0;printf("gpio exported successfully\n");
+        return 0;
+        printf("Fan turned off\n");
+
 }
 
 int control_fan()
