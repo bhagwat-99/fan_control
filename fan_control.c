@@ -262,12 +262,12 @@ int control_fan()
 
                 //printf("In control fan core_temp: %d\n",core_temp);
 
-                if(core_temp < 70000)
+                if(core_temp < temp_l)
                 {
                         // turn fan off
                         fan_off();
                 }
-                if(core_temp > 75000)
+                if(core_temp > temp_h)
                 {
                         //turn on fan
                         fan_on();
