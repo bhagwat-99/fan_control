@@ -1,13 +1,13 @@
+#include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #define CONF_FILE_PATH "/etc/entomologist/fan_control.conf"
-int temp_h=0,temp_l=0;// fan control temperature upper and lower limit
+int temp_h=75000,temp_l=70000;// fan control temperature upper and lower limit
 
 
 // check if file already exist to avoid gpio export error
